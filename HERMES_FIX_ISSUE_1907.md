@@ -1,24 +1,9 @@
 # Solution for Issue #1907
 
 ## Summary
-### 1. Опис виправлення
-
-У функції `decodeCctpMessage` додано перевірку значень полів `version` (заголовок CCTP повідомлення) та `burnBodyVersion` (тіло операції burn) на відповідність підтримуваній версії протоколу (версія `0`). Якщо отримано непідтримувану версію повідомлення або корисного навантаження, функція негайно викидає виключення `Unsupported message version`, запобігаючи некоректному парсингу полів зі зміщеними офсетами та виконанню невалідної транзакції.
-
----
-
-### 2. Патч / Код випра
+In `decodeCctpMessage`, strict version validation checks have been implemented for `version` (CCTP message header) and `burnBodyVersion` (burn message body payload) against the supported protocol version (`0`). When an unsupported header or payload version is received, the decoder immediately throws an `Unsupported message version` error. This prevents corrupted parsing of payload fields caused by shifted schema offsets and avoids the execution of invalid cross-chain transactions.
 
 ## Implementation / Patch
-```
-### 1. Опис виправлення
-
-У функції `decodeCctpMessage` додано перевірку значень полів `version` (заголовок CCTP повідомлення) та `burnBodyVersion` (тіло операції burn) на відповідність підтримуваній версії протоколу (версія `0`). Якщо отримано непідтримувану версію повідомлення або корисного навантаження, функція негайно викидає виключення `Unsupported message version`, запобігаючи некоректному парсингу полів зі зміщеними офсетами та виконанню невалідної транзакції.
-
----
-
-### 2. Патч / Код виправлення
-
 ```diff
 --- a/src/utils/message.ts
 +++ b/src/utils/message.ts
@@ -80,7 +65,6 @@
      },
    };
  }
-```
 ```
 
 ## Payout Address (Solana)
